@@ -74,6 +74,10 @@ const uploadFile = async() => {
                     
                 </div>
             </div>
+
+            <table>
+                
+            </table>
         </div>
     </AuthenticatedLayout>
     
