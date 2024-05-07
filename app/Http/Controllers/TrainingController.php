@@ -55,6 +55,7 @@ class TrainingController extends Controller
             'training_venue' => $request->training_venue,
             'training_address' => $request->training_address,
             'training_speakers' => $request->training_speakers,
+            'issuance_date' => $request->issuance_date,
             'director_id' => $request->director_id,
             'hr_head_id' => $request->hr_head_id,
         ]);

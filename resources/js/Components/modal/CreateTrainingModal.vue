@@ -178,7 +178,7 @@ const dropdownStyle = "inline-flex w-full justify-center gap-x-1.5 rounded-md bg
                             <InputLabel for="issuance_date" value="Date of Issuance" />
 
                             <div>
-                                <input :class="dropdownStyle" type="date" disabled v-model="form.issuance_date"/>
+                                <input :class="dropdownStyle" type="date" v-model="form.issuance_date"/>
                             </div>
 
                             <InputError class="mt-2" :message="form.errors.name" />

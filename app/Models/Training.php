@@ -28,6 +28,7 @@ class Training extends Model
         'training_venue',
         'training_address',
         'training_speakers',
+        'issuance_date',
         'director_id',
         'hr_head_id',
     ];

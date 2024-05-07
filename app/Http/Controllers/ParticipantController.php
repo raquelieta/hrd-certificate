@@ -39,11 +39,12 @@ class ParticipantController extends Controller
         $file = $request->file;
 
         $spreadsheet = IOFactory::load($file);
+        
         $sheet = $spreadsheet->getActiveSheet();
-
+        
         $highestRow = $sheet->getHighestDataRow();
         $highestColumn = $sheet->getHighestDataColumn();
-
+ 
         // Initialize an array to store the data
         $data = [];
 
@@ -57,15 +58,16 @@ class ParticipantController extends Controller
             $data[] = $rowData;
         }
         
-        $innerData = [];
-        for ($j = 0; $j < count($data[0]); $j++) {
-            $columnData = [];
-            for ($i = 0; $i < count($data); $i++) {
-                $columnData[] = $data[$i][$j];
-            }
-            $innerData[] = $columnData;
-        }
-        dd($innerData);
+        dd($data);
+        // $innerData = [];
+        // for ($j = 0; $j < count($data[0]); $j++) {
+        //     $columnData = [];
+        //     for ($i = 0; $i < count($data); $i++) {
+        //         $columnData[] = $data[$i][$j];
+        //     }
+        //     $innerData[] = $columnData;
+        // }
+        // dd($innerData);
 
             
 
