@@ -6,12 +6,13 @@ import { Link, useForm, usePage } from '@inertiajs/vue3';
 import ToastPlugin from 'vue-toast-notification';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
-const props = defineProps(['training']);
+const props = defineProps(['training','training_id']);
 
 const participantLoading = ref(false);
 
 const form = useForm({
     file:null,
+    training_id:props.training_id,
 })
 
 const uploadFile = async() => {
