@@ -18,9 +18,9 @@ class ParticipantController extends Controller
      */
     public function index($trainingId)
     {
-        $training = Participant::with('training')->first();
+        $participants = Participant::with('training')->get();
 
-        return Inertia::render('Participant/IndexParticipant', ['training' => $training, 'training_id' => $trainingId]);
+        return Inertia::render('Participant/IndexParticipant', ['participants' => $participants, 'training_id' => $trainingId]);
     }
 
     /**
@@ -48,6 +48,13 @@ class ParticipantController extends Controller
         // Initialize an array to store the data
         $data = [];
         $civil_status=null;
+        $rank = null;
+        $tenure = 0;
+        $province=null;
+        $sector = null;
+        $agency = null;
+        $personal_number = null;
+        $personal_email = null;
 
         // Loop through each row and column to extract data
         for ($row = 2; $row <= $highestRow; $row++) {
@@ -68,33 +75,43 @@ class ParticipantController extends Controller
             $cellValueP = $sheet->getCell('P'.$row)->getCalculatedValue();
             $cellValueQ = $sheet->getCell('Q'.$row)->getCalculatedValue();
 
-            if($cellValueH == ''){
-                $civil_status = 'Single';
+            $civil_status = ($cellValueH == '') ? 'Single' : $cellValueH;
+            $rank = ($cellValueJ == '') ? 'Non-supervisory' : $cellValueJ;
+            $tenure = ($cellValueK == '') ? 1 : $cellValueK;
+            $province = ($cellValueL == '') ? 'Misamis Oriental' : $cellValueL;
+            $sector = ($cellValueN == '') ? 'Uncategorized' : $cellValueN;
+            $agency = ($cellValueO == '') ? 'Not indicated' : $cellValueO;
+            $personal_number = ($cellValueP == '') ? 0 : $cellValueP;
+            $personal_email = ($cellValueQ == '') ? 'none' : $cellValueQ;
+
+            $participant_name = strtoupper($cellValueC . ', ' . $cellValueD . ' ' . $cellValueE);
+
+            $existingParticipant = Participant::whereRaw('UPPER(CONCAT(last_name, ", ", first_name, " ", middle_initial)) = ?', [$participant_name])->exists();
+
+            if(!$existingParticipant){
+                $participant = Participant::create([
+                    'training_id' => $request->training_id,
+                    'last_name' => $cellValueC,
+                    'first_name' => $cellValueD,
+                    'middle_initial' => $cellValueE,
+                    'suffix' => $cellValueF,
+                    'position' => $cellValueG,
+                    'civil_status' => $civil_status,
+                    'employment_status' => $cellValueI,
+                    'rank' => $rank,
+                    'years_in_service' => $tenure,
+                    'province' => $province,
+                    'sex' => $cellValueM,
+                    'government_sector' => $sector,
+                    'agency_name' => $agency,
+                    'personal_number' => $personal_number,
+                    'personal_email' => $personal_email,
+                ]);
             }
-            // $rowData = [];
-            // for ($col = 'A'; $col <= $highestColumn; $col++) {
-            //     $cellValue = $sheet->getCell($col . $row)->getValue();
-            //     $rowData[] = $cellValue;
-            // }
-            // $data[] = $rowData;
-            $participant = Participant::create([
-                'training_id' => $request->training_id,
-                'last_name' => $cellValueC,
-                'first_name' => $cellValueD,
-                'middle_initial' => $cellValueE,
-                'suffix' => $cellValueF,
-                'position' => $cellValueG,
-                'civil_status' => $civil_status,
-                'employment_status' => $cellValueI,
-                'rank' => $cellValueJ,
-                'years_in_service' => $cellValueK,
-                'province' => $cellValueL,
-                'sex' => $cellValueM,
-                'government_sector' => $cellValueN,
-                'agency_name' => $cellValueO,
-                'personal_number' => $cellValueP,
-                'personal_email' => $cellValueQ,
-            ]);
+            else{
+                return Inertia::render('Participant/IndexParticipant',['message' => "Duplicate Entry"]);
+            }
+            
         }
         // dd($data);
         

@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TrainingController;
 use App\Http\Controllers\SignatoryController;
 use App\Http\Controllers\ParticipantController;
+use App\Http\Controllers\CertificateController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -36,6 +37,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/{trainingId}', [ParticipantController::class, 'index'])->name('participant.index');
         Route::post('/store',[ParticipantController::class,'store'])->name('participant.store');
     });
+
+    //Certificates
+    Route::post('/generate-certificate',[CertificateController::class,'store'])->name('certificate.store');
     
 });
 

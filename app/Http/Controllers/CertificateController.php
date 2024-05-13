@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Certificate;
 use Illuminate\Http\Request;
+use App\Models\Participant;
+use TCPDF;
 
 class CertificateController extends Controller
 {
@@ -28,7 +30,17 @@ class CertificateController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $participants = Participant::where('training_id',$request->training_id)->with('training')->get();
+
+        dd($participants);
+        $pdf = new TCPDF('P', 'mm', 'A4',true,'UTF-8',false);
+        $pdf>SetMargins(20,20,20,true);
+        $pdf->SetAuthor('Civil Service Commission Regional Office X');
+        $pdf->SetTitle('Certificate of Completion');
+        $pdf->SetAutoPageBreak(false,0);
+        $pdf->AddPage();
+
+        $pdf->writeHTML(view('certificate'));
     }
 
     /**
