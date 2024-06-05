@@ -59,11 +59,14 @@ const uploadFile = async() => {
 };
 
 const printCertificate = (index) => {
-    axios.post(route('certificate.store'),{training_id:index})
+    axios.post(route('certificate.store'),{training_id:index},{responseType:'blob'})
     .then(response => {
-        const pdfBlob = new Blob([response.data], {type: 'application/pdf'});
-        const pdfUrl = URL.createObjectURL(pdfBlob);
-        pdfIframe.value.src = pdfUrl;
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'certificates.pdf');
+        document.body.appendChild(link);
+        link.click();
     })
     .catch(error => {
         console.error('error:', error)
@@ -91,7 +94,7 @@ const filteredData = computed( () => props.participants.filter(participants => {
                                 Import file
                             </button>
                             <button class="text-xs float-right rounded-full bg-yellow-300 px-5 py-2 font-semibold inline-flex items-center mr-2 mb-2" @click="printCertificate(props.training_id)">
-                                Print Certificate
+                                Generate Certificate
                             </button>
 
                             <div v-if="showUpload" class="h-10 py-2 justify-center items-center mb-5">

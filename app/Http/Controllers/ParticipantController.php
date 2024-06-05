@@ -18,7 +18,7 @@ class ParticipantController extends Controller
      */
     public function index($trainingId)
     {
-        $participants = Participant::with('training')->get();
+        $participants = Participant::where('training_id',$trainingId)->with('training')->get();
 
         return Inertia::render('Participant/IndexParticipant', ['participants' => $participants, 'training_id' => $trainingId]);
     }
@@ -59,21 +59,25 @@ class ParticipantController extends Controller
         // Loop through each row and column to extract data
         for ($row = 2; $row <= $highestRow; $row++) {
             $cellValueB = $sheet->getCell('B'.$row)->getCalculatedValue();
-            $cellValueC = $sheet->getCell('C'.$row)->getCalculatedValue();
-            $cellValueD = $sheet->getCell('D'.$row)->getCalculatedValue();
-            $cellValueE = $sheet->getCell('E'.$row)->getCalculatedValue();
-            $cellValueF = $sheet->getCell('F'.$row)->getCalculatedValue();
-            $cellValueG = $sheet->getCell('G'.$row)->getCalculatedValue();
-            $cellValueH = $sheet->getCell('H'.$row)->getCalculatedValue();
-            $cellValueI = $sheet->getCell('I'.$row)->getCalculatedValue();
-            $cellValueJ = $sheet->getCell('J'.$row)->getCalculatedValue();
-            $cellValueK = $sheet->getCell('K'.$row)->getCalculatedValue();
-            $cellValueL = $sheet->getCell('L'.$row)->getCalculatedValue();
-            $cellValueM = $sheet->getCell('M'.$row)->getCalculatedValue();
-            $cellValueN = $sheet->getCell('N'.$row)->getCalculatedValue();
-            $cellValueO = $sheet->getCell('O'.$row)->getCalculatedValue();
-            $cellValueP = $sheet->getCell('P'.$row)->getCalculatedValue();
-            $cellValueQ = $sheet->getCell('Q'.$row)->getCalculatedValue();
+            $cellValueC = $sheet->getCell('C'.$row)->getCalculatedValue();//Last Name
+            $cellValueD = $sheet->getCell('D'.$row)->getCalculatedValue();//First Name
+            $cellValueE = $sheet->getCell('E'.$row)->getCalculatedValue();//Middle Initial
+            $cellValueF = $sheet->getCell('F'.$row)->getCalculatedValue();//Suffix
+            $cellValueG = $sheet->getCell('G'.$row)->getCalculatedValue();//Position
+            $cellValueH = $sheet->getCell('H'.$row)->getCalculatedValue();//Civil Status
+            $cellValueI = $sheet->getCell('I'.$row)->getCalculatedValue();//Employment Status
+            $cellValueJ = $sheet->getCell('J'.$row)->getCalculatedValue();//Rank
+            $cellValueK = $sheet->getCell('K'.$row)->getCalculatedValue();//Tenure
+            $cellValueL = $sheet->getCell('L'.$row)->getCalculatedValue();//Province
+            $cellValueM = $sheet->getCell('M'.$row)->getCalculatedValue();//
+            $cellValueN = $sheet->getCell('N'.$row)->getCalculatedValue();//Government Sector
+            $cellValueO = $sheet->getCell('O'.$row)->getCalculatedValue();//Agency Name
+            $cellValueP = $sheet->getCell('P'.$row)->getCalculatedValue();//Personal Number
+            $cellValueQ = $sheet->getCell('Q'.$row)->getCalculatedValue();//Personal Email
+
+            $last_name = strtolower($cellValueC);
+            $first_name = strtolower($cellValueD);
+            $middle_initial = strtolower($cellValueE);
 
             $civil_status = ($cellValueH == '') ? 'Single' : $cellValueH;
             $rank = ($cellValueJ == '') ? 'Non-supervisory' : $cellValueJ;
@@ -86,14 +90,16 @@ class ParticipantController extends Controller
 
             $participant_name = strtoupper($cellValueC . ', ' . $cellValueD . ' ' . $cellValueE);
 
-            $existingParticipant = Participant::whereRaw('UPPER(CONCAT(last_name, ", ", first_name, " ", middle_initial)) = ?', [$participant_name])->exists();
+            $existingParticipant = Participant::whereRaw('UPPER(CONCAT(last_name, ", ", first_name, " ", middle_initial)) = ?', [$participant_name])
+                                    ->where('training_id',$request->training_id)
+                                    ->exists();
 
             if(!$existingParticipant){
                 $participant = Participant::create([
                     'training_id' => $request->training_id,
-                    'last_name' => $cellValueC,
-                    'first_name' => $cellValueD,
-                    'middle_initial' => $cellValueE,
+                    'last_name' => ucwords($last_name),
+                    'first_name' => ucwords($first_name),
+                    'middle_initial' => ucwords($middle_initial),
                     'suffix' => $cellValueF,
                     'position' => $cellValueG,
                     'civil_status' => $civil_status,

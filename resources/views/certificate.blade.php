@@ -11,7 +11,8 @@
     <body>
         <div class="">
             <div class="w-3/6 mx-auto sm:px-6 lg:px-8">
-                Certificate of Completion
+                <h1>Certificate of Completion</h1>
+                <p style="color:#000;">{{ $participant->name }}</p>
             </div>
         </div>
     </body>

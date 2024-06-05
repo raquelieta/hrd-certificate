@@ -44,7 +44,8 @@ const form = useForm({
 const AddEditTraining = () => {
     form.director_id = props.modal.signatories[0].id;
     form.hr_head_id = props.modal.signatories[1].id;
-
+    form.training_hours = getTotalTrainingHours;
+    
     form.post(route('training.store'),{
         preserveScroll:true,
         onSuccess: () => {

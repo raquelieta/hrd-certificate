@@ -31,7 +31,8 @@ class Participant extends Model
         'personal_email',
     ];
     protected $appends = [
-        'full_name'
+        'full_name',
+        'cert_name'
     ];
 
     public function fullName() : Attribute
@@ -39,6 +40,21 @@ class Participant extends Model
         return Attribute::make(
             get: function (mixed $value, array $attributes) {
               return  $attributes['last_name'] . ', ' . $attributes['first_name'] . ' ' . $attributes['middle_initial'];
+            }
+        );
+    }
+
+    public function certName() : Attribute
+    {
+        return Attribute::make(
+            get: function (mixed $value, array $attributes) {
+              if($attributes['suffix'] == 'None'){
+                return  $attributes['first_name'] . ' ' . $attributes['middle_initial'] . ' ' . $attributes['last_name'];
+              }
+              else{
+                return  $attributes['first_name'] . ' ' . $attributes['middle_initial'] . ' ' . $attributes['last_name'] . ' ' . $attributes['suffix'];
+              }
+              
             }
         );
     }
