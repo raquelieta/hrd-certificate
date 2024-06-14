@@ -16,7 +16,7 @@ class TrainingController extends Controller
     public function index()
     {
         $trainings = Training::all();
-        $signatories = Signatory::all();
+        $signatories = $signatory = Signatory::where('is_approved',1)->orWhere('is_attested',1)->orWhere('is_msd',1)->get();
 
         return Inertia::render('Dashboard', ['trainings' => $trainings, 'signatories' => $signatories]);
     }

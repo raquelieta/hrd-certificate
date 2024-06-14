@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Signatory extends Model
 {
@@ -19,4 +20,17 @@ class Signatory extends Model
         'is_approved',
         'is_msd',
     ];
+
+    protected $appends = [
+        'full_name'
+    ];
+    
+    public function fullName() : Attribute
+    {
+        return Attribute::make(
+            get: function (mixed $value, array $attributes) {
+              return  strtoupper($attributes['first_name']) . ' ' . strtoupper($attributes['middle_initial']) . ' ' . strtoupper($attributes['last_name']);
+            }
+        );
+    }
 }
