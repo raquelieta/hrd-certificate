@@ -31,6 +31,7 @@ class Training extends Model
         'issuance_date',
         'director_id',
         'hr_head_id',
+        'qr_code_path',
     ];
 
     public function participants() {

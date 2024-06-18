@@ -39,6 +39,7 @@ const form = useForm({
     issuance_date:null,
     director_id:null,
     hr_head_id:null,
+    qr_code_path:'',
 });
 
 const AddEditTraining = () => {
@@ -269,6 +270,18 @@ const dropdownStyle = "inline-flex w-full justify-center gap-x-1.5 rounded-md bg
                         />
                         <InputError class="mt-2" :message="form.errors.name" />
                     </div>
+
+                    <div class="mt-2">
+                        <InputLabel for="training_speakers" value="Link to Directory" class="inline-flex mr-2 mt-2"/>
+                        <TextInput
+                            type="text"
+                            class="qr_code mt-1 block w-full"
+                            v-model="form.qr_code_path"
+                            required
+                            autocomplete="qr_code_path"
+                        />
+                    </div>
+
                     <div class="flex items-center justify-end mt-4">
                         <DangerButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing" @click="close()">
                             <InputLabel class="dark:text-gray-900 text-white">Cancel</InputLabel> 

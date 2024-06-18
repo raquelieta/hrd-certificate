@@ -25,6 +25,7 @@ return new class extends Migration
             $table->timestamp('issuance_date');
             $table->integer('director_id');
             $table->integer('hr_head_id');
+            $table->string('qr_code_path');
             $table->softDeletes();
             $table->timestamps();
         });
